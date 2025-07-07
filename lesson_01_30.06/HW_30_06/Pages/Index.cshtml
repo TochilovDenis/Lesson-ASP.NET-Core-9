@@ -2,10 +2,9 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    int dayOfYear = DateTime.Now.DayOfYear;
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Сегодня <strong>@dayOfYear</strong> день в году</p>
+    <p>Сегодня <strong>@Model.DayOfYear</strong> день в году</p>
 </div>

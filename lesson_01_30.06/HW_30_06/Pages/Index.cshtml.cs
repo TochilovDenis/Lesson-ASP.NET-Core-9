@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace HW_30_06.Pages
@@ -7,6 +7,8 @@ namespace HW_30_06.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
+        public int DayOfYear { get; private set; }
+
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -14,7 +16,7 @@ namespace HW_30_06.Pages
 
         public void OnGet()
         {
-
+            DayOfYear = DateTime.Now.DayOfYear;
         }
     }
 }
