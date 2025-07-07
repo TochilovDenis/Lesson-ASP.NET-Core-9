@@ -23,9 +23,3 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
-
-/*
- * Задание 1.
- Создайте и запустите базовое приложение ASP.NET Core, построенное на основании ASP.NET Razor Pages.
- В веб-странице выведите номер текущего дня в году.
- */
