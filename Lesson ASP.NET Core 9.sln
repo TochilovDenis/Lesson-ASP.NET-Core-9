@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lesson_04_07.07", "lesson_0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendingFiles", "lesson_04_07.07\SendingFiles\SendingFiles.csproj", "{36B65BF4-CE0E-4224-BC24-FF3D037913F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendingForms", "lesson_04_07.07\SendingForms\SendingForms.csproj", "{BD519A45-4CA4-4D84-BF84-0BB2C1DD74B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{36B65BF4-CE0E-4224-BC24-FF3D037913F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36B65BF4-CE0E-4224-BC24-FF3D037913F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36B65BF4-CE0E-4224-BC24-FF3D037913F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD519A45-4CA4-4D84-BF84-0BB2C1DD74B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD519A45-4CA4-4D84-BF84-0BB2C1DD74B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD519A45-4CA4-4D84-BF84-0BB2C1DD74B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD519A45-4CA4-4D84-BF84-0BB2C1DD74B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +91,7 @@ Global
 		{AD90328E-56D0-403D-8952-25FD59F9A391} = {F9DDB888-815D-4C93-8F54-837151B2C0A8}
 		{0BC15A21-EE49-42B3-808A-5D4CC2C082F3} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{36B65BF4-CE0E-4224-BC24-FF3D037913F0} = {3A7ABDB3-927B-4D87-8FA3-E08ECD551F4B}
+		{BD519A45-4CA4-4D84-BF84-0BB2C1DD74B7} = {3A7ABDB3-927B-4D87-8FA3-E08ECD551F4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55575D57-40AB-4567-818C-F07168B41718}
