@@ -16,7 +16,10 @@
 <body>
     <h2>Список пользователей</h2>
     <div>
-        <input type="hidden" id="userId" />
+        <p>
+            id пользователь: <br/>
+            <input id="userId" />
+        </p>
         <p>
             Имя:<br />
             <input id="userName" />
@@ -82,7 +85,7 @@
             });
             if (response.ok === true) {
                 const user = await response.json();
-                edit_user.textContent = JSON.stringify(user.id).replaceWith(row(user));
+                edit_user.textContent = JSON.stringify(user);
             }
             else {
                 const error = await response.json();
