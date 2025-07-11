@@ -45,7 +45,7 @@ app.Run(async (context) =>
             await response.WriteAsJsonAsync(new { message = "Некорректные данные" });
         }
     }
-    else if (path == "/api/users" && request.Method == "PUT")
+    else if (path == "/api/put_user" && request.Method == "PUT")
     {
         try
         {
@@ -58,6 +58,7 @@ app.Run(async (context) =>
                 // если пользователь найден, изменяем его данные и отправляем обратно клиенту
                 if (user != null)
                 {
+                    user.Id= userData.Id;  
                     user.Age = userData.Age;
                     user.Name = userData.Name;
                     await response.WriteAsJsonAsync(user);
