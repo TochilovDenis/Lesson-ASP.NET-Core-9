@@ -26,6 +26,7 @@
             <input id="userAge" type="number" />
         </p>
         <button id="getBtn">Get</button>
+        <button id="postBtn">Post</button>
     </div>
     <p>Новый пользователь: </p>
     <p id="new_user"></p>
@@ -38,6 +39,26 @@
             let response = await fetch(url);
             let users = await response.json();
             console.log(users);
+        }
+
+        document.getElementById("postBtn").addEventListener("click", PostUser);
+        async function PostUser() {
+            const response = await fetch("./api/post_user", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: userName.value,
+                    age: parseInt(userAge.value)
+                })
+            });
+            if (response.ok === true) {
+                const user = await response.json();
+                new_user.textContent = JSON.stringify(user);
+            }
+            else {
+                const error = await response.json();
+                console.log(error.message);
+            }
         }
     </script>
 </body>

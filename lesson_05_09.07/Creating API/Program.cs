@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 // начальные данные
 List<Person> users = new List<Person>
@@ -21,6 +22,28 @@ app.Run(async (context) =>
     if (path == "/api/users" && request.Method == "GET")
     {
         await response.WriteAsJsonAsync(users);
+    }
+    else if (path == "/api/post_user" && request.Method == "POST")
+    {
+        try
+        {
+            var user = await request.ReadFromJsonAsync<Person>();
+            if (user != null)
+            {
+                user.Id = Guid.NewGuid().ToString();
+                users.Add(user);
+                await response.WriteAsJsonAsync(user);
+            }
+            else
+            {
+                throw new Exception("Некорректные данные");
+            }
+        }
+        catch (Exception ex)
+        {
+            response.StatusCode = 400;
+            await response.WriteAsJsonAsync(new { message = "Некорректные данные" });
+        }
     }
     else
     {
