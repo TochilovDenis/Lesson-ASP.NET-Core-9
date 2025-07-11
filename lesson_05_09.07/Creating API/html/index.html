@@ -17,7 +17,7 @@
     <h2>Список пользователей</h2>
     <div>
         <p>
-            id пользователь: <br/>
+            id пользователь: <br />
             <input id="userId" />
         </p>
         <p>
@@ -33,23 +33,30 @@
         <button id="putBtn">Put</button>
 
     </div>
+
+    <p>Список пользователя:</p>
+    <p id="get_users"></p>
+
     <p>Новый пользователь: </p>
     <p id="new_user"></p>
 
     <p>Изменение пользователя:</p>
     <p id="edit_user"></p><p id="user.id"></p>
 
-    
-    <script>
-        document.getElementById("getBtn").addEventListener("click", GetUser);
 
+    <script>
+
+        // GET(получение данных)
+        document.getElementById("getBtn").addEventListener("click", GetUser);
         async function GetUser() {
             let url = './api/users';
             let response = await fetch(url);
             let users = await response.json();
-            console.log(users);
+            get_users.textContent = JSON.stringify(users);
         }
 
+
+        //POST(добавление данных)
         document.getElementById("postBtn").addEventListener("click", PostUser);
         async function PostUser() {
             const response = await fetch("./api/post_user", {
