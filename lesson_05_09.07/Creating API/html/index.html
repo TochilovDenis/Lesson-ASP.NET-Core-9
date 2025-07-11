@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>UserAge</title>
+    <style>
+        td {
+            padding: 5px;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Список пользователей</h2>
+    <div>
+        <input type="hidden" id="userId" />
+        <p>
+            Имя:<br />
+            <input id="userName" />
+        </p>
+        <p>
+            Возраст:<br />
+            <input id="userAge" type="number" />
+        </p>
+        <button id="getBtn">Get</button>
+    </div>
+    <p>Новый пользователь: </p>
+    <p id="new_user"></p>
+    
+    <script>
+        document.getElementById("getBtn").addEventListener("click", GetUser);
+
+        async function GetUser() {
+            let url = './api/users';
+            let response = await fetch(url);
+            let users = await response.json();
+            console.log(users);
+        }
+    </script>
+</body>
+</html>
