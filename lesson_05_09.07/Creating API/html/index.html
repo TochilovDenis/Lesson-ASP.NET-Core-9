@@ -4,18 +4,19 @@
     <meta charset="utf-8" />
     <title>UserAge</title>
     <style>
-        td {
-            padding: 5px;
+        div {
+            margin: 10px 10px;
         }
 
-        button {
+        button, input {
             margin: 5px;
         }
     </style>
 </head>
-<body>
-    <h2>Список пользователей</h2>
+<body style="display: flex;">
     <div>
+        <h2>Список пользователей</h2>
+
         <p>
             id пользователь: <br />
             <input id="userId" />
@@ -33,20 +34,29 @@
         <button id="putBtn">Put</button>
         <button id="delBtn">Delete</button>
 
+        <p>Список пользователя:</p>
+        <p id="get_users"></p>
+
+        <p>Новый пользователь: </p>
+        <p id="new_user"></p>
+
+        <p>Изменение пользователя:</p>
+        <p id="edit_user"></p><p id="user.id"></p>
+
+        <p>Удаление пользователя:</p>
+        <p id="del_user"></p><p id="user.id"></p>
     </div>
 
-    <p>Список пользователя:</p>
-    <p id="get_users"></p>
 
-    <p>Новый пользователь: </p>
-    <p id="new_user"></p>
-
-    <p>Изменение пользователя:</p>
-    <p id="edit_user"></p><p id="user.id"></p>
-
-    <p>Удаление пользователя:</p>
-    <p id="del_user"></p><p id="user.id"></p>
-
+    <div>
+        <h2>Выберите файл для загрузки</h2>
+        <form action="upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="uploads" /><br>
+            <input type="file" name="uploads" /><br>
+            <input type="file" name="uploads" /><br>
+            <input type="submit" value="Загрузить" />
+        </form>
+    </div>
 
 
     <script>
