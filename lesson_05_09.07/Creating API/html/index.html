@@ -31,6 +31,7 @@
         <button id="getBtn">Get</button>
         <button id="postBtn">Post</button>
         <button id="putBtn">Put</button>
+        <button id="delBtn">Delete</button>
 
     </div>
 
@@ -42,6 +43,10 @@
 
     <p>Изменение пользователя:</p>
     <p id="edit_user"></p><p id="user.id"></p>
+
+    <p>Удаление пользователя:</p>
+    <p id="del_user"></p><p id="user.id"></p>
+
 
 
     <script>
@@ -97,6 +102,36 @@
             else {
                 const error = await response.json();
                 console.log(error.message);
+            }
+        }
+
+        // DELETE (удаление данных)
+        document.getElementById("delBtn").addEventListener("click", deleteUser);
+        async function deleteUser() {
+            const id = userId.value;
+            if (!id) {
+                alert('Введите ID пользователя');
+                return;
+            }
+
+            const response = await fetch(`./api/del_user/${id}`, {
+                method: "DELETE",
+                headers: { "Accept": "application/json" }
+            });
+
+            if (response.status === 204) {
+                // При успешном удалении обновляем список пользователей
+                await GetUser();
+                userId.value = '';
+                userName.value = '';
+                userAge.value = '';
+                del_user.textContent = "Пользователь успешно удален";
+            } else if (response.status === 404) {
+                const error = await response.json();
+                del_user.textContent = `Ошибка: ${error.message}`;
+            } else {
+                const error = await response.json();
+                del_user.textContent = `Ошибка: ${error.message}`;
             }
         }
     </script>

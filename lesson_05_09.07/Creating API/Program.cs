@@ -58,7 +58,7 @@ app.Run(async (context) =>
                 // если пользователь найден, изменяем его данные и отправляем обратно клиенту
                 if (user != null)
                 {
-                    user.Id= userData.Id;  
+                    user.Id = userData.Id;
                     user.Age = userData.Age;
                     user.Name = userData.Name;
                     await response.WriteAsJsonAsync(user);
@@ -78,6 +78,38 @@ app.Run(async (context) =>
         {
             response.StatusCode = 400;
             await response.WriteAsJsonAsync(new { message = "Некорректные данные" });
+        }
+    }
+    else if (path.Value.StartsWith("/api/del_user/") && request.Method == "DELETE")
+    {
+        try
+        {
+            // Извлекаем ID из пути запроса
+            var id = path.Value.Substring("/api/del_user/".Length);
+
+            // Находим пользователя по ID
+            var user = users.FirstOrDefault(u => u.Id == id);
+
+            if (user != null)
+            {
+                // Удаляем пользователя из списка
+                users.Remove(user);
+
+                // Возвращаем успешный ответ без тела
+                response.StatusCode = 204;
+                await response.WriteAsync("");
+            }
+            else
+            {
+                // Если пользователь не найден, возвращаем 404
+                response.StatusCode = 404;
+                await response.WriteAsJsonAsync(new { message = "Пользователь не найден" });
+            }
+        }
+        catch (Exception)
+        {
+            response.StatusCode = 400;
+            await response.WriteAsJsonAsync(new { message = "Ошибка при удалении пользователя" });
         }
     }
     else
