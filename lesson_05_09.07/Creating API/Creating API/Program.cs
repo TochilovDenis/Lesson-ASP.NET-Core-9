@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+﻿using System.Text;
 
 // начальные данные
 List<Person> users = new List<Person>
@@ -39,7 +38,7 @@ app.Run(async (context) =>
                 throw new Exception("Некорректные данные");
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             response.StatusCode = 400;
             await response.WriteAsJsonAsync(new { message = "Некорректные данные" });
@@ -112,15 +111,131 @@ app.Run(async (context) =>
             await response.WriteAsJsonAsync(new { message = "Ошибка при удалении пользователя" });
         }
     }
+    else if (request.Path == "/upload" && request.Method == "POST")
+    {
+
+        try
+        {
+
+            if (!request.HasFormContentType)
+            {
+                response.StatusCode = 400;
+                await response.WriteAsJsonAsync("Ожидается форма с файлами");
+                return;
+            }
+
+            IFormFileCollection files = request.Form.Files;
+            // путь к папке, где будут храниться файлы
+            var uploadPath = $"{Directory.GetCurrentDirectory()}/uploads";
+            // создаем папку для хранения файлов
+            Directory.CreateDirectory(uploadPath);
+
+            foreach (var file in files)
+            {
+                // путь к папке uploads
+                string fullPath = $"{uploadPath}/{file.FileName}";
+
+                // сохраняем файл в папку uploads
+                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+            await response.WriteAsJsonAsync("Файлы успешно загружены");
+        }
+        catch (Exception ex)
+        {
+            response.StatusCode = 500;
+            await response.WriteAsync($"Ошибка загрузки: {ex.Message}");
+        }
+    }
+    else if (request.Path == "/image" && request.Method == "GET")
+    {
+        try
+        {
+            // Получаем имя файла из query-параметра
+            string fileName = request.Query["file_name"].FirstOrDefault();
+
+            // Проверяем, что имя файла указано
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                response.StatusCode = 400;
+                await response.WriteAsJsonAsync("Не указано имя файла");
+                return;
+            }
+
+            // Безопасное объединение путей
+            string uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+            string filePath = Path.Combine(uploadsDir, fileName);
+
+            // Защита от Directory Traversal атак
+            if (!filePath.StartsWith(uploadsDir))
+            {
+                response.StatusCode = 403;
+                await response.WriteAsJsonAsync("Доступ запрещен");
+                return;
+            }
+
+            // Проверяем существование файла
+            if (!File.Exists(filePath))
+            {
+                response.StatusCode = 404;
+                await response.WriteAsJsonAsync("Файл не найден");
+                return;
+            }
+
+            // Определяем Content-Type по расширению файла
+            string contentType = GetContentType(filePath);
+            response.ContentType = contentType;
+
+            // Отправляем файл
+            await response.SendFileAsync(filePath);
+        }
+        catch (Exception ex)
+        {
+            response.StatusCode = 500;
+            await response.WriteAsJsonAsync($"Ошибка: {ex.Message}");
+        }
+    }
     else
     {
         response.ContentType = "text/html; charset=utf-8";
-        await response.SendFileAsync("html/index.html");
+        var indexPath = "html/index.html";
+        await response.SendFileAsync(indexPath);
     }
+
 });
 
-app.Run();
 
+// Запускаем приложение с обработкой ошибок
+try
+{
+    await app.RunAsync();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error server: {ex.Message}");
+}
+
+// Метод для определения Content-Type по расширению файла
+static string GetContentType(string path)
+{
+    var types = new Dictionary<string, string>
+    {
+        {".png", "image/png"},
+        {".jpg", "image/jpeg"},
+        {".jpeg", "image/jpeg"},
+        {".gif", "image/gif"},
+        {".pdf", "application/pdf"},
+        {".txt", "text/plain"},
+        {".html", "text/html"},
+        {".css", "text/css"},
+        {".js", "application/javascript"}
+    };
+
+    string ext = Path.GetExtension(path).ToLowerInvariant();
+    return types.TryGetValue(ext, out string type) ? type : "application/octet-stream";
+}
 
 public class Person
 {
@@ -128,3 +243,4 @@ public class Person
     public string Name { get; set; } = "";
     public int Age { get; set; }
 }
+
