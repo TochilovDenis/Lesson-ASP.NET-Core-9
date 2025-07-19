@@ -6,5 +6,12 @@
         {
             return builder.UseMiddleware<UsersMiddleware>();
         }
+
+        public static IApplicationBuilder UseMainMiddleware(this IApplicationBuilder builder)
+        {
+            // builder.Map("/api", appBuilder => builder.UseMiddleware<MainsMiddleware>());
+            return builder.UseMiddleware<MainMiddleware>();
+        }
+
     }
 }

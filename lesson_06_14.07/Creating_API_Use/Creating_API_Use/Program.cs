@@ -11,12 +11,6 @@ var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<UsersMiddleware>();
-
-app.Run(async (context) =>
-{
-    context.Response.ContentType = "text/html; charset=utf-8";
-    var indexPath = Path.Combine(Directory.GetCurrentDirectory(), "html/index.html");
-    await context.Response.SendFileAsync(indexPath);
-});
+app.UseMainMiddleware();
 
 app.Run();
