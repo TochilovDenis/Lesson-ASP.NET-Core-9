@@ -2,7 +2,7 @@
 
 namespace Creating_API_Use
 {
-    public class Users
+    public class UsersMiddleware
     {
         private readonly RequestDelegate next;
 
@@ -14,7 +14,7 @@ namespace Creating_API_Use
         new() { Id = Guid.NewGuid().ToString(), Name = "Sam", Age = 24 }
         };
 
-        public Users(RequestDelegate next)
+        public UsersMiddleware(RequestDelegate next)
         {
             this.next = next;
         }
