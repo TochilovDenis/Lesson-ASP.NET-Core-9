@@ -28,26 +28,32 @@ namespace Creating_API_Use
 
                 if (path == "/api/users" && request.Method == "GET")
                 {
+                    Console.WriteLine("start /api/users");
                     await HandleUsersGetAsync(context);
                 }
                 else if (path == "/api/post_user" && request.Method == "POST")
                 {
+                    Console.WriteLine("start /api/post_user");
                     await HandleUsersPostAsync(context);
                 }
                 else if (path == "/api/put_user" && request.Method == "PUT")
                 {
+                    Console.WriteLine("start /api/put_user");
                     await HandleUsersPutAsync(context);
                 }
                 else if (path.Value.StartsWith("/api/del_user/") && request.Method == "DELETE")
                 {
+                    Console.WriteLine("start /api/del_user/r");
                     await HandleUsersDeleteAsync(context);
                 }
                 else if (request.Path == "/upload" && request.Method == "POST")
                 {
+                    Console.WriteLine("start /upload");
                     await HandleUploadAsync(context);
                 }
                 else if (request.Path == "/image" && request.Method == "GET")
                 {
+                    Console.WriteLine("start /image");
                     await HandleImageAsync(context);
                 }
                 else
@@ -110,6 +116,7 @@ namespace Creating_API_Use
 
             _users.Remove(user);
             context.Response.StatusCode = StatusCodes.Status204NoContent;
+            await context.Response.WriteAsJsonAsync("Пользователь удален");
         }
 
         async Task HandleUploadAsync(HttpContext context)

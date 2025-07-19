@@ -42,10 +42,10 @@ namespace Creating_API_Use
                     break;
                 case FileNotFoundException _:
                     // Для ошибок файлов (некорректные данные и т.д.)
-                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;   // 404
                     break;
                 case UnauthorizedAccessException _:
-                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;  // 403
                     break;
                 default:
                     // Для всех остальных ошибок
@@ -57,10 +57,13 @@ namespace Creating_API_Use
             _logger.LogError(exception, "Произошла ошибка при обработке запроса");
 
             // Формируем ответ клиенту
-            await context.Response.WriteAsJsonAsync(new
-            {
-                response.StatusCode, exception.Message
-            });
+            //await context.Response.WriteAsJsonAsync(new
+            //{
+            //    response.StatusCode,
+            //    exception.Message
+            //});
+
+            await context.Response.WriteAsync($"{exception.Message}, {response.StatusCode}");
         }
     }
 
