@@ -109,6 +109,10 @@
                 const user = await response.json();
                 edit_user.textContent = JSON.stringify(user);
             }
+            else if (response.status === 500) {
+                const error = await response.json();
+                edit_user.textContent = `Ошибка: ${error.message}`;
+            }
             else {
                 const error = await response.json();
                 console.log(error.message);

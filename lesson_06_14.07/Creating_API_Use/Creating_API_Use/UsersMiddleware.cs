@@ -4,10 +4,10 @@ namespace Creating_API_Use
 {
     public class UsersMiddleware
     {
-        private readonly RequestDelegate next;
+        private readonly RequestDelegate _next;
 
         // начальные данные
-        List<Person> users = new List<Person>
+        List<Person> _users = new List<Person>
         {
         new() { Id = Guid.NewGuid().ToString(), Name = "Tom", Age = 37 },
         new() { Id = Guid.NewGuid().ToString(), Name = "Bob", Age = 41 },
@@ -16,257 +16,162 @@ namespace Creating_API_Use
 
         public UsersMiddleware(RequestDelegate next)
         {
-            this.next = next;
+            this._next = next;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var request = context.Request;
-            var path = request.Path;
+            try
+            {
+                var request = context.Request;
+                var path = request.Path;
 
-            if (path == "/api/users" && request.Method == "GET")
-            {
-                await HandleUsersGetAsync(context);
+                if (path == "/api/users" && request.Method == "GET")
+                {
+                    await HandleUsersGetAsync(context);
+                }
+                else if (path == "/api/post_user" && request.Method == "POST")
+                {
+                    await HandleUsersPostAsync(context);
+                }
+                else if (path == "/api/put_user" && request.Method == "PUT")
+                {
+                    await HandleUsersPutAsync(context);
+                }
+                else if (path.Value.StartsWith("/api/del_user/") && request.Method == "DELETE")
+                {
+                    await HandleUsersDeleteAsync(context);
+                }
+                else if (request.Path == "/upload" && request.Method == "POST")
+                {
+                    await HandleUploadAsync(context);
+                }
+                else if (request.Path == "/image" && request.Method == "GET")
+                {
+                    await HandleImageAsync(context);
+                }
+                else
+                {
+                    await _next.Invoke(context);
+                }
             }
-            else if (path == "/api/post_user" && request.Method == "POST")
+            catch (Exception ex)
             {
-                await HandleUsersPostAsync(context);
-            }
-            else if (path == "/api/put_user" && request.Method == "PUT")
-            {
-                await HandleUsersPutAsync(context);
-            }
-            else if (path.Value.StartsWith("/api/del_user/") && request.Method == "DELETE")
-            {
-                await HandleUsersDeleteAsync(context);
-            }
-            else if (request.Path == "/upload" && request.Method == "POST")
-            {
-                await HandleUploadAsync(context);
-            }
-            else if (request.Path == "/image" && request.Method == "GET")
-            {
-                await HandleImageAsync(context);
-
-            }            
-            else
-            {
-                await next.Invoke(context);
+                context.Response.ContentType = "application/json";
+                throw;
             }
         }
         async Task HandleUsersGetAsync(HttpContext context)
         {
-            await context.Response.WriteAsJsonAsync(users);
+            await context.Response.WriteAsJsonAsync(_users);
         }
 
         async Task HandleUsersPostAsync(HttpContext context)
         {
-            var response = context.Response;
-            var request = context.Request;
-            try
+            var user = await context.Request.ReadFromJsonAsync<Person>();
+            if (user == null)
             {
-                var user = await request.ReadFromJsonAsync<Person>();
-                if (user != null)
-                {
-                    user.Id = Guid.NewGuid().ToString();
-                    users.Add(user);
-                    await response.WriteAsJsonAsync(user);
-                }
-                else
-                {
-                    throw new Exception("Некорректные данные");
-                }
+                throw new ArgumentException("Некорректные данные пользователя");
             }
-            catch (Exception)
-            {
-                response.StatusCode = 400;
-                await response.WriteAsJsonAsync(new { message = "Некорректные данные" });
-            }
+
+            user.Id = Guid.NewGuid().ToString();
+            _users.Add(user);
+            await context.Response.WriteAsJsonAsync(user);
         }
 
         async Task HandleUsersPutAsync(HttpContext context)
         {
-            var response = context.Response;
-            var request = context.Request;
-            try
+            var userData = await context.Request.ReadFromJsonAsync<Person>();
+            if (userData == null)
             {
-                // получаем данные пользователя
-                Person? userData = await request.ReadFromJsonAsync<Person>();
-                if (userData != null)
-                {
-                    // получаем пользователя по id
-                    var user = users.FirstOrDefault(u => u.Id == userData.Id);
-                    // если пользователь найден, изменяем его данные и отправляем обратно клиенту
-                    if (user != null)
-                    {
-                        user.Id = userData.Id;
-                        user.Age = userData.Age;
-                        user.Name = userData.Name;
-                        await response.WriteAsJsonAsync(user);
-                    }
-                    else
-                    {
-                        response.StatusCode = 404;
-                        await response.WriteAsJsonAsync(new { message = "Пользователь не найден" });
-                    }
-                }
-                else
-                {
-                    throw new Exception("Некорректные данные");
-                }
+                throw new ArgumentException("Некорректные данные пользователя");
             }
-            catch (Exception)
+
+            var user = _users.FirstOrDefault(u => u.Id == userData.Id);
+            if (user == null)
             {
-                response.StatusCode = 400;
-                await response.WriteAsJsonAsync(new { message = "Некорректные данные" });
+                throw new NotFoundException("Пользователь не найден");
             }
+
+            user.Age = userData.Age;
+            user.Name = userData.Name;
+            await context.Response.WriteAsJsonAsync(user);
         }
 
         async Task HandleUsersDeleteAsync(HttpContext context)
         {
-            var response = context.Response;
-            var request = context.Request;
-            var path = request.Path;
-            try
+            var id = context.Request.Path.Value?["/api/del_user/".Length..];
+            var user = _users.FirstOrDefault(u => u.Id == id);
+
+            if (user == null)
             {
-                // Извлекаем ID из пути запроса
-                var id = path.Value.Substring("/api/del_user/".Length);
-
-                // Находим пользователя по ID
-                var user = users.FirstOrDefault(u => u.Id == id);
-
-                if (user != null)
-                {
-                    // Удаляем пользователя из списка
-                    users.Remove(user);
-
-                    // Возвращаем успешный ответ без тела
-                    response.StatusCode = 204;
-                    await response.WriteAsync("");
-                }
-                else
-                {
-                    // Если пользователь не найден, возвращаем 404
-                    response.StatusCode = 404;
-                    await response.WriteAsJsonAsync(new { message = "Пользователь не найден" });
-                }
+                throw new NotFoundException("Пользователь не найден");
             }
-            catch (Exception)
-            {
-                response.StatusCode = 400;
-                await response.WriteAsJsonAsync(new { message = "Ошибка при удалении пользователя" });
-            }
+
+            _users.Remove(user);
+            context.Response.StatusCode = StatusCodes.Status204NoContent;
         }
 
         async Task HandleUploadAsync(HttpContext context)
         {
-            var response = context.Response;
-            var request = context.Request;
-            var path = request.Path;
-
-            try
+            if (!context.Request.HasFormContentType)
             {
-
-                if (!request.HasFormContentType)
-                {
-                    response.StatusCode = 400;
-                    await response.WriteAsJsonAsync("Ожидается форма с файлами");
-                    return;
-                }
-
-                IFormFileCollection files = request.Form.Files;
-                // путь к папке, где будут храниться файлы
-                var uploadPath = $"{Directory.GetCurrentDirectory()}/uploads";
-                // создаем папку для хранения файлов
-                Directory.CreateDirectory(uploadPath);
-
-                foreach (var file in files)
-                {
-                    // путь к папке uploads
-                    string fullPath = $"{uploadPath}/{file.FileName}";
-
-                    // сохраняем файл в папку uploads
-                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
-                }
-                await response.WriteAsJsonAsync("Файлы успешно загружены");
+                throw new ArgumentException("Ожидается форма с файлами");
             }
-            catch (Exception ex)
+
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+            Directory.CreateDirectory(uploadPath);
+
+            foreach (var file in context.Request.Form.Files)
             {
-                response.StatusCode = 500;
-                await response.WriteAsync($"Ошибка загрузки: {ex.Message}");
+                var fullPath = Path.Combine(uploadPath, file.FileName);
+                using var fileStream = new FileStream(fullPath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
             }
+
+            await context.Response.WriteAsJsonAsync("Файлы успешно загружены");
         }
 
         async Task HandleImageAsync(HttpContext context)
         {
-            var response = context.Response;
-            var request = context.Request;
-            var path = request.Path;
-            try
+            var fileName = context.Request.Query["file_name"].FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(fileName))
             {
-                // Получаем имя файла из query-параметра
-                string fileName = request.Query["file_name"].FirstOrDefault();
-
-                // Проверяем, что имя файла указано
-                if (string.IsNullOrWhiteSpace(fileName))
-                {
-                    response.StatusCode = 400;
-                    await response.WriteAsJsonAsync("Не указано имя файла");
-                    return;
-                }
-
-                // Безопасное объединение путей
-                string uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
-                string filePath = Path.Combine(uploadsDir, fileName);
-
-                // Защита от Directory Traversal атак
-                if (!filePath.StartsWith(uploadsDir))
-                {
-                    response.StatusCode = 403;
-                    await response.WriteAsJsonAsync("Доступ запрещен");
-                    return;
-                }
-
-                // Проверяем существование файла
-                if (!File.Exists(filePath))
-                {
-                    response.StatusCode = 404;
-                    await response.WriteAsJsonAsync("Файл не найден");
-                    return;
-                }
-
-                // Определяем Content-Type по расширению файла
-                string contentType = GetContentType(filePath);
-                response.ContentType = contentType;
-
-                // Отправляем файл
-                await response.SendFileAsync(filePath);
+                throw new ArgumentException("Не указано имя файла");
             }
-            catch (Exception ex)
+
+            var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            if (!filePath.StartsWith(uploadsDir))
             {
-                response.StatusCode = 500;
-                await response.WriteAsJsonAsync($"Ошибка: {ex.Message}");
+                throw new ForbiddenException("Доступ запрещен");
             }
+
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Файл не найден");
+            }
+
+            context.Response.ContentType = GetContentType(filePath);
+            await context.Response.SendFileAsync(filePath);
         }
 
         // Метод для определения Content-Type по расширению файла
         static string GetContentType(string path)
         {
             var types = new Dictionary<string, string>
-    {
-        {".png", "image/png"},
-        {".jpg", "image/jpeg"},
-        {".jpeg", "image/jpeg"},
-        {".gif", "image/gif"},
-        {".pdf", "application/pdf"},
-        {".txt", "text/plain"},
-        {".html", "text/html"},
-        {".css", "text/css"},
-        {".js", "application/javascript"}
-    };
+            {
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".pdf", "application/pdf"},
+                {".txt", "text/plain"},
+                {".html", "text/html"},
+                {".css", "text/css"},
+                {".js", "application/javascript"}
+            };
 
             string ext = Path.GetExtension(path).ToLowerInvariant();
             return types.TryGetValue(ext, out string type) ? type : "application/octet-stream";
