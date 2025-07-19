@@ -16,8 +16,7 @@ app.Run(async (context) =>
     var response = context.Response;
     var request = context.Request;
     var path = request.Path;
-    //string expressionForNumber = "^/api/users/([0-9]+)$";   // если id представляет число
-
+    
     if (path == "/api/users" && request.Method == "GET")
     {
         await response.WriteAsJsonAsync(users);
