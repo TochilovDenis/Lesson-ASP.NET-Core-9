@@ -1,4 +1,4 @@
-﻿namespace Creating_API_Use
+﻿namespace IWebHostEnvironment
 {
     public class MainMiddleware
     {
@@ -18,6 +18,12 @@
                 context.Response.ContentType = "text/html; charset=utf-8";
                 var indexPath = Path.Combine(Directory.GetCurrentDirectory(), "html/index.html");
                 await context.Response.SendFileAsync(indexPath);
+            }
+            else if (context.Request.Path == "/upload" && context.Request.Method == "GET")
+            {
+                context.Response.ContentType = "text/html; charset=utf-8";
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "html/upload.html");
+                await context.Response.SendFileAsync(uploadPath);
             }
             else
             {

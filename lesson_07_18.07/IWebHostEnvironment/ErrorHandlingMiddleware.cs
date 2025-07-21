@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
-namespace Creating_API_Use
+namespace IWebHostEnvironment
 {
     public class ErrorHandlingMiddleware
     {
