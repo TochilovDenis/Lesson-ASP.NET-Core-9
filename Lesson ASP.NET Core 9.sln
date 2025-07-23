@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IWebHostEnvironment", "less
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lesson_08_21.07", "lesson_08_21.07", "{BF55EE90-D086-42B7-9A81-76F00367AFC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DependencyInjection", "DependencyInjection\DependencyInjection.csproj", "{FC8AF8FB-F91F-4F9A-964B-0E03B30FFC5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{09A68E68-6588-4589-BE0A-9A91D30F970C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09A68E68-6588-4589-BE0A-9A91D30F970C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09A68E68-6588-4589-BE0A-9A91D30F970C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC8AF8FB-F91F-4F9A-964B-0E03B30FFC5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC8AF8FB-F91F-4F9A-964B-0E03B30FFC5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC8AF8FB-F91F-4F9A-964B-0E03B30FFC5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC8AF8FB-F91F-4F9A-964B-0E03B30FFC5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,6 +134,7 @@ Global
 		{3F7D9E5B-17BD-FD40-723D-C538F43D0577} = {0978F41C-05D5-461E-8859-6E6798180C9C}
 		{7FF8454D-6DB6-2D04-E9CD-57696214ED40} = {A63D58E4-9313-46CC-9510-C710CE8F1D1E}
 		{09A68E68-6588-4589-BE0A-9A91D30F970C} = {1DA055F3-D0B5-45ED-9759-276306296952}
+		{FC8AF8FB-F91F-4F9A-964B-0E03B30FFC5A} = {BF55EE90-D086-42B7-9A81-76F00367AFC0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55575D57-40AB-4567-818C-F07168B41718}
