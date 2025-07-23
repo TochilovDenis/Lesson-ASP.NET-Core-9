@@ -45,6 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lesson_07_18.07", "lesson_0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IWebHostEnvironment", "lesson_07_18.07\IWebHostEnvironment\IWebHostEnvironment.csproj", "{09A68E68-6588-4589-BE0A-9A91D30F970C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lesson_08_21.07", "lesson_08_21.07", "{BF55EE90-D086-42B7-9A81-76F00367AFC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

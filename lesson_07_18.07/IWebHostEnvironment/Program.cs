@@ -12,7 +12,9 @@ var app = builder.Build();
  
 if (app.Environment.IsDevelopment()) // http
 {
-   app.Run(async (context) => await context.Response.WriteAsync("In Development Stage"));
+   //app.Run(async (context) => await context.Response.WriteAsync("In Development Stage"));
+    app.UseMiddleware<ErrorHandlingMiddleware>();
+    app.UseMainMiddleware();
 
 }
 else if (app.Environment.IsProduction()) // https
